@@ -100,6 +100,7 @@ class Client {
     public Socket socket = null;
     public OutputStream os = null;
     public InputStream is = null;
+    private boolean clear = false;
 
     /**
      * 发送心跳包
@@ -146,6 +147,13 @@ class Client {
                         System.out.println("socket connected");
                     }
                     Thread.sleep(100);
+                    if(!clear)
+                    {
+                        os.write(("c").getBytes());
+                        os.flush();
+                        clear = true;
+                        System.out.println("socket server start clear all");
+                    }
                     is = socket.getInputStream();
                     int size = is.available();
                     if(size <= 0)
