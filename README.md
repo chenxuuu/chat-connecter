@@ -1,6 +1,6 @@
 # chat-connecter
 
-a sponge plugin, use udp connect other programs.
+a sponge plugin, use tcp connect other programs.
 
 使用tcp和其他程序互通的sponge服务器插件
 

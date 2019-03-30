@@ -34,7 +34,6 @@ public class ChatConnecter {
 
     @Inject
     private Logger logger;
-    private boolean tabInit = false;
 
     @Listener//服务器启动
     public void onServerStart(GameStartedServerEvent event) {
@@ -46,13 +45,9 @@ public class ChatConnecter {
     public void onClientConnectionJoin(ClientConnectionEvent.Join event) {
         Player player = event.getTargetEntity();
         SendTcp("l"+player.getName());
-        if(!tabInit)
-        {
-            TabList tablist = player.getTabList();
-            tablist.setHeader(Text.of(TextColors.DARK_GREEN, "糖拌苦力怕"));
-            tablist.setFooter(Text.of(TextColors.LIGHT_PURPLE, "sweetcreeper.com"));
-            tabInit = true;
-        }
+        TabList tablist = player.getTabList();
+        tablist.setHeader(Text.of(TextColors.DARK_GREEN, "糖拌苦力怕"));
+        tablist.setFooter(Text.of(TextColors.LIGHT_PURPLE, "sweetcreeper.com"));
     }
     @Listener//玩家掉线
     public void onClientDisconnect(ClientConnectionEvent.Disconnect event)
