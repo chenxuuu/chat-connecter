@@ -82,7 +82,7 @@ public class ChatConnecter {
     public void SendTcp(String msg)
     {
         try{
-            tcpClient.os.write(msg.getBytes());
+            tcpClient.os.write(msg.getBytes("utf8"));
             tcpClient.os.flush();
         }
         catch (Exception e)
@@ -142,7 +142,6 @@ class Client {
     public class SocketThread extends Thread {
         @Override
         public void run() {
-            long startTime = System.currentTimeMillis();
             sendHeartbeat();
             while (true) {
                 try {
@@ -154,19 +153,11 @@ class Client {
                     Thread.sleep(100);
                     is = socket.getInputStream();
                     int size = is.available();
-                    if (size <= 0) {
-                        if ((System.currentTimeMillis() - startTime) > 120 * 1000) {
-                            // 如果超过120秒没有收到服务器发回来的信息，说明socket连接可能已经被远程服务器关闭
-                            socket.close(); // 这时候可以关闭socket连接
-                            startTime = System.currentTimeMillis();
-                        }
+                    if(size <= 0)
                         continue;
-                    } else {
-                        startTime = System.currentTimeMillis();
-                    }
                     byte[] resp = new byte[size];
                     is.read(resp);
-                    String response = new String(resp);
+                    String response = new String(resp,"utf8");
                     try{
                         MessageChannel.TO_ALL.send(Text.of(response));
                     }
