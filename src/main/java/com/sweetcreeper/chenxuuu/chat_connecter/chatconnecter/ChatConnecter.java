@@ -14,6 +14,8 @@ import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.network.Message;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginManager;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.Text;
@@ -31,7 +33,6 @@ import java.net.*;
         description = "connect with others"
 )
 public class ChatConnecter {
-
     @Inject
     private Logger logger;
 
@@ -136,6 +137,8 @@ class Client {
         }
     }
 
+    PluginManager pluginManager = Sponge.getGame().getPluginManager();
+    SpongeExecutorService minecraftExecutor = Sponge.getScheduler().createSyncExecutor(pluginManager.getPlugin("chatconnecter").get());
     public class SocketThread extends Thread {
         @Override
         public void run() {
@@ -165,7 +168,9 @@ class Client {
                     try {
                         if(response.indexOf("cmd") == 0)
                         {
-                            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), response.substring(3));
+                            minecraftExecutor.submit(() -> {
+                                Sponge.getCommandManager().process(Sponge.getServer().getConsole(), response.substring(3));
+                            });
                         }
                         else{
                             MessageChannel.TO_ALL.send(Text.of(response));
