@@ -29,7 +29,7 @@ import java.net.*;
 @Plugin(
         id = "chatconnecter",
         name = "ChatConnecter",
-        version = "1.0.1",
+        version = "1.0.2",
         description = "connect with others"
 )
 public class ChatConnecter {
@@ -61,9 +61,7 @@ public class ChatConnecter {
     public void onMessage(MessageEvent event)
     {
         String message = event.getMessage().toPlain();
-
-        if(message.indexOf("<") == 0 || message.indexOf("[") == 0)
-            SendTcp("m"+message);
+        SendTcp("m"+message);
     }
 
 
@@ -79,7 +77,11 @@ public class ChatConnecter {
     public void SendTcp(String msg)
     {
         try{
-            tcpClient.os.write(msg.getBytes("utf8"));
+            tcpClient.os.write((msg
+                    .replace("|","\\1")
+                    .replace("\\","\\\\") +
+                    "|")
+                    .getBytes("utf8"));
             tcpClient.os.flush();
         }
         catch (Exception e)
