@@ -1,0 +1,21 @@
+name: MC-QQ-Bridge
+version: ${project.version}
+main: com.mcqqbridge.McQqBridge
+api-version: '1.21'
+description: Minecraft与QQ机器人消息互通插件
+author: McQqBridge
+website: https://github.com/mcqqbridge
+
+commands:
+  qqbridge:
+    description: MC-QQ桥接插件主命令
+    usage: /qqbridge <reload|status|reconnect>
+    aliases: [mqb, qq]
+
+permissions:
+  mcqqbridge.admin:
+    description: 管理插件的权限
+    default: op
+  mcqqbridge.command:
+    description: 使用插件命令的权限
+    default: op
